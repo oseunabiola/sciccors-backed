@@ -10,7 +10,6 @@ const app = express();
 const ALLOWED_ID_ALIAS_CHAR_LENGTH = 20;
 
 const PORT = process.env.PORT || 4000;
-console.log(isAlpha);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

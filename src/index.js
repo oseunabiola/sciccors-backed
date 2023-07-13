@@ -4,7 +4,7 @@ const uniqueHash = require("unique-hash").default;
 const cors = require("cors");
 const ApiError = require("./utils/api-error");
 const { logger } = require("./utils/logger");
-
+const isAlpha = require("validator/lib/isAlpha");
 const app = express();
 
 const ALLOWED_ID_ALIAS_CHAR_LENGTH = 20;
@@ -33,6 +33,11 @@ app.post("/api/v1/scissors", (req, res, next) => {
         "Alias not allowed. Please choose an alias of 20 characters or below."
       );
 
+    if (alias && !isAlpha(alias, "en-us", { ignore: "-" }))
+      throw ApiError.badRequest(
+        "Alias not allowed. Only alphabets and hyphen are allowed as alias."
+      );
+
     const uniqueId = uniqueHash(url, { format: "string" });
 
     const shortenedURL = alias
@@ -58,7 +63,9 @@ app.get("/:uniqueId", async (req, res, next) => {
     if (uniqueId.length > ALLOWED_ID_ALIAS_CHAR_LENGTH)
       throw ApiError.badRequest("Invalid shortened URL");
 
+    // Get the equivalent of the unique identifier from storage
     // Increment hit counter for this url
+    // Respond with the full URL
 
     res.json({ success: true, uniqueId });
   } catch (error) {

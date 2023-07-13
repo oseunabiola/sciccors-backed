@@ -4,12 +4,13 @@ const uniqueHash = require("unique-hash").default;
 const cors = require("cors");
 const ApiError = require("./utils/api-error");
 const { logger } = require("./utils/logger");
-const isAlpha = require("validator/lib/isAlpha");
+const isAlpha = require("validator/lib/isAlpha").default;
 const app = express();
 
 const ALLOWED_ID_ALIAS_CHAR_LENGTH = 20;
 
 const PORT = process.env.PORT || 4000;
+console.log(isAlpha);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -33,7 +34,7 @@ app.post("/api/v1/scissors", (req, res, next) => {
         "Alias not allowed. Please choose an alias of 20 characters or below."
       );
 
-    if (alias && !isAlpha(alias, "en-us", { ignore: "-" }))
+    if (alias && !isAlpha(alias, "en-GB", { ignore: "-" }))
       throw ApiError.badRequest(
         "Alias not allowed. Only alphabets and hyphen are allowed as alias."
       );
